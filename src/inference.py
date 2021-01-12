@@ -136,13 +136,13 @@ def main(args):
     model = get_model()
     model = load_pretrained(model)
 
-    if args.url is not None:
+    if args.url is not None and args.a is None:
         # download audio
         url = args.url
         info = audio_download(url)
 
         ID = info.get('id', None)
-        audio, rate = librosa.load( os.path.join(ID, ID + '.wav') , sr=44100, mono=False)
+        audioPath = os.path.join(ID, ID + '.wav')
     
     else:
         # load audio from local path
@@ -151,7 +151,9 @@ def main(args):
         if not os.path.exists(ID):
             os.makedirs(ID)
         
-        audio, rate = librosa.load(args.a, sr=44100, mono=False)
+        audioPath = args.a
+
+    audio, rate = librosa.load(audioPath, sr=44100, mono=False)
 
     # cut audio
     start = int(args.s)
