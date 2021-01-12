@@ -1,6 +1,7 @@
 from argparse import ArgumentParser
 from typing import Tuple
 from warnings import warn
+import os
 
 import torch
 import torch.nn as nn
@@ -247,7 +248,7 @@ class Dense_CUNet_Framework(Spectrogram_based):
 
         return restored, output_spec_cache
 
-    def separate_track(self, input_signal, target) -> torch.Tensor:
+    def separate_track(self, input_signal, target, writePath='') -> torch.Tensor:
 
         import numpy as np
 
@@ -267,8 +268,9 @@ class Dense_CUNet_Framework(Spectrogram_based):
         separated = np.concatenate(separated, axis=0)
 
         import soundfile
-        soundfile.write('temp.wav', separated, 44100)
-        return soundfile.read('temp.wav')[0]
+        audiopath = os.path.join(writePath, str(target) + '.wav')
+        soundfile.write(audiopath, separated, 44100)
+        return soundfile.read(audiopath)[0]
 
     @staticmethod
     def add_model_specific_args(parent_parser):

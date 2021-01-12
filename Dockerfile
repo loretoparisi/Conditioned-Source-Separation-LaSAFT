@@ -12,7 +12,9 @@ WORKDIR app
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     software-properties-common \
-    build-essential
+    build-essential \
+    libsndfile1 \
+    ffmpeg
 
 # app requirements
 COPY src/requirements.txt requirements.txt
