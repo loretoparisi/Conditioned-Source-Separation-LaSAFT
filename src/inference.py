@@ -109,7 +109,7 @@ def load_pretrained(model, pretrained=None):
     return model
 
 ### Separate
-def separate_all(model, audio):
+def separate_all(model, audio, ID):
     
     sr = 44100
     
@@ -136,34 +136,43 @@ def main(args):
     model = get_model()
     model = load_pretrained(model)
 
-    # download audio
-    url = args.url
-    info = audio_download(url)
+    if args.url is not None:
+        # download audio
+        url = args.url
+        info = audio_download(url)
 
-    # load audio
-    #audio, rate = librosa.load(info.get('title', None) + '.wav', sr=44100, mono=False)
-    global ID 
-    ID = info.get('id', None)
-    audio, rate = librosa.load( os.path.join(ID, ID + '.wav') , sr=44100, mono=False)
+        ID = info.get('id', None)
+        audio, rate = librosa.load( os.path.join(ID, ID + '.wav') , sr=44100, mono=False)
+    
+    else:
+        # load audio from local path
+        ID = os.path.splitext(args.a)[0]
+        
+        if not os.path.exists(ID):
+            os.makedirs(ID)
+        
+        audio, rate = librosa.load(args.a, sr=44100, mono=False)
 
-    start = args.start
-    stop = args.stop
+    # cut audio
+    start = int(args.s)
+    stop = int(args.e)
 
-    if stop is not None:
+    if stop != 0 and isinstance(stop, int) and stop > start:
         audio = audio[:, start*rate:stop*rate]
 
-    separate_all(model, audio)
+    # separate audio
+    separate_all(model, audio, ID)
 
     return
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    usage = 'python inference.py  url'
-    parser=argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter, description=usage, add_help=False)
-    
-    parser.add_argument('url')
-    parser.add_argument('--start', default=0)
-    parser.add_argument('--stop', default=None)
+    usage = 'python inference.py'
+    parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter, description=usage, add_help=False)
+    parser.add_argument('--a', default=None, help='local audio path')
+    parser.add_argument('--url', default=None, help='youtube url')
+    parser.add_argument('--s', default=0, help='start time')
+    parser.add_argument('--e', help='end time')
 
     args = parser.parse_args()
 

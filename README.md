@@ -15,7 +15,9 @@ python Separation_wav.py -mix_scp /root/test.wav -yaml options/train/train.yml -
 
 ## Run Inference
 ```
-python inference.py [url]
+python inference.py --url "youtube-url" --s 0 --e 10
+
+python inference.py --a /path/to/audio.wav --s 0 --e 10
 ```
 
 ### References
