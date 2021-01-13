@@ -62,14 +62,14 @@ def get_model_args():
 
     # DenseNet Hyperparams
 
-    args ['n_blocks'] = 7
-    args ['input_channels'] = 4
-    args ['internal_channels'] = 24
-    args ['first_conv_activation'] = 'relu'
-    args ['last_activation'] = 'identity'
-    args ['t_down_layers'] = None
-    args ['f_down_layers'] = None
-    args ['tif_init_mode'] = None
+    args['n_blocks'] = 7
+    args['input_channels'] = 4
+    args['internal_channels'] = 24
+    args['first_conv_activation'] = 'relu'
+    args['last_activation'] = 'identity'
+    args['t_down_layers'] = None
+    args['f_down_layers'] = None
+    args['tif_init_mode'] = None
 
     # TFC_TDF Block's Hyperparams
     args['n_internal_layers'] =5
@@ -102,9 +102,9 @@ def get_model():
 
     return model
 
-def load_pretrained(model, pretrained=None):
+def load_pretrained(model, pretrained='pretrained/gpocm_lasaft.ckpt'):
     
-    model = model.load_from_checkpoint('pretrained/gpocm_lasaft.ckpt')
+    model = model.load_from_checkpoint(pretrained)
 
     return model
 
